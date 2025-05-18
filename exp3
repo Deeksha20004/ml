@@ -1,0 +1,24 @@
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+
+# Load and standardize the Iris dataset
+iris = load_iris()
+X_scaled = StandardScaler().fit_transform(iris.data)
+
+# Apply PCA
+pca_result = PCA(n_components=2).fit_transform(X_scaled)
+pca_df = pd.DataFrame(pca_result, columns=['PC1', 'PC2'])
+pca_df['Target'] = iris.target
+
+# Plot PCA
+plt.figure(figsize=(8, 6))
+sns.scatterplot(data=pca_df, x='PC1', y='PC2', hue='Target', palette='viridis')
+plt.title("PCA of Iris Dataset")
+plt.xlabel("Principal Component 1")
+plt.ylabel("Principal Component 2")
+plt.legend(title="Target", labels=iris.target_names)
+plt.show()
