@@ -1,0 +1,24 @@
+import random
+import numpy as np
+import pandas as pd
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import confusion_matrix, accuracy_score
+
+# Generate data
+x = [random.uniform(0, 1) for _ in range(100)]
+y = [0 if i <= 0.5 else 1 for i in x]
+x_train, x_test = x[:50], x[50:]
+y_train, y_test = y[:50], y[50:]
+
+# DataFrames
+train = pd.DataFrame({'values': x_train, 'labels': y_train})
+test = pd.DataFrame({'values': x_test, 'labels': y_test})
+
+# KNN training and evaluation
+for k in [1, 2, 3, 4, 5, 20, 30]:
+    model = KNeighborsClassifier(n_neighbors=k)
+    model.fit(np.array(x_train).reshape(-1, 1), y_train)
+    y_pred = model.predict(np.array(x_test).reshape(-1, 1))
+    test[f'pred_k={k}'] = y_pred
+    print(confusion_matrix(y_test, y_pred))
+    print(accuracy_score(y_test, y_pred))
